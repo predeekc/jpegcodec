@@ -4,10 +4,10 @@
 extern crate test;
 
 mod coding;
-mod dct;
 mod frame;
 mod image;
 mod reader;
+mod transform;
 mod util;
 
 use byteorder::ReadBytesExt;
@@ -20,7 +20,6 @@ fn process(reader: &mut dyn std::io::Read) -> Result<bool, std::io::Error> {
     let mut frame = frame::Frame::default();
     let mut quant_tables = util::QuantizationTables::new();
     let mut coding_tables = coding::HuffmanTables::new();
-    let dct = dct::Dct::new();
     while !done {
         let value = reader.read_u8().unwrap();
         if value == 0xFF {
@@ -39,7 +38,7 @@ fn process(reader: &mut dyn std::io::Read) -> Result<bool, std::io::Error> {
                 }
                 0xDA => {
                     println!("Start of Scan");
-                    frame.process_scan(reader, &dct, &quant_tables, &coding_tables)?;
+                    frame.process_scan(reader, &quant_tables, &coding_tables)?;
                 }
                 0xFE => println!("Comment"),
                 0xC4 => {

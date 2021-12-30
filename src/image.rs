@@ -40,6 +40,10 @@ impl RgbData {
         RgbData { width, height, image }
     }
 
+    pub fn rgb_data(&self) -> &[u8] {
+        &self.image[..]
+    }
+
     // write a 32x32 block of image data
     //
     pub fn write_yuv420_mcu(&mut self, x: u16, y: u16, c_y: &[i16], u: &[i16], v: &[i16]) {
